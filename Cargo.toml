@@ -5,3 +5,5 @@ edition = "2021"
 
 [dependencies]
 genanki-rs = "0.4"
+serde = { version = "1.0", features = ["derive"] }
+toml = "0.5"
