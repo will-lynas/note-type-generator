@@ -1,6 +1,6 @@
 use genanki_rs::{Deck, Error, Field, Model, Note, Template};
 
-fn main() -> Result<(), Error> {
+fn main() -> Result<(), Box<Error>> {
     let my_model = Model::new(
         1607392319,
         "Simple Model",
