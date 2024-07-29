@@ -1,6 +1,7 @@
-use genanki_rs::{Deck, Error, Field, Model, Note, Template};
+use genanki_rs::{Deck, Field, Model, Note, Template};
+use std::error::Error;
 
-fn main() -> Result<(), Box<Error>> {
+fn main() -> Result<(), Box<dyn Error>> {
     let custom_css = ".card {\n font-family: arial;\n font-size: 20px;\n text-align: center;\n color: black;\n}\n";
 
     let my_model = Model::new(
