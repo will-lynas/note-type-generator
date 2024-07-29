@@ -4,7 +4,10 @@ fn main() -> Result<(), Error> {
     let my_model = Model::new(
         1607392319,
         "Simple Model",
-        vec![Field::new("Question"), Field::new("Answer")],
+        vec![
+            Field::new("Question").font("Arial"),
+            Field::new("Answer").font("Arial"),
+        ],
         vec![Template::new("Card 1")
             .qfmt("{{Question}}")
             .afmt(r#"{{FrontSide}}<hr id="answer">{{Answer}}"#)],
