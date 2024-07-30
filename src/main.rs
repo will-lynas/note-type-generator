@@ -1,15 +1,14 @@
 use genanki_rs::{Deck, Field, Model, Note, Template};
 use serde::Deserialize;
+use std::collections::hash_map::DefaultHasher;
 use std::error::Error;
 use std::fs::read_to_string;
+use std::hash::{Hash, Hasher};
 use std::io;
 
 const CSS_FILE_PATH: &str = "input/style.css";
 const CONFIG_PATH: &str = "input/config.toml";
 const TEMPLATE_PATH: &str = "input/template.html";
-
-const NOTE_ID: i64 = 1607392319;
-const DECK_ID: i64 = 2059400110;
 
 #[derive(Deserialize, Debug)]
 struct Config {
@@ -37,6 +36,13 @@ fn default_note_type_name() -> String {
 
 fn default_deck_name() -> String {
     "Imported Deck".to_string()
+}
+
+fn hash_string_to_i64(s: &str) -> i64 {
+    let mut hasher = DefaultHasher::new();
+    s.hash(&mut hasher);
+    let hash = hasher.finish();
+    hash as i64
 }
 
 fn main() -> Result<(), Box<dyn Error>> {
@@ -67,7 +73,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     let config: Config = toml::from_str(&config_content).expect("Error parsing config toml");
 
     let my_model = Model::new(
-        NOTE_ID,
+        hash_string_to_i64(&config.note_type_name),
         &config.note_type_name,
         config
             .fields
@@ -93,7 +99,11 @@ fn main() -> Result<(), Box<dyn Error>> {
     // Use the field names as values on the placeholder note
     let my_note = Note::new(my_model, config.fields.iter().map(|s| s.as_str()).collect())?;
 
-    let mut my_deck = Deck::new(DECK_ID, &config.deck_name, &config.deck_description);
+    let mut my_deck = Deck::new(
+        hash_string_to_i64(&config.deck_name),
+        &config.deck_name,
+        &config.deck_description,
+    );
 
     my_deck.add_note(my_note);
     my_deck.write_to_file("output.apkg")?;
