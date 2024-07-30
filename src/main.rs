@@ -99,8 +99,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         config
             .templates
             .into_iter()
-            .enumerate()
-            .map(|(index, template_config)| {
+            .map(|template_config| {
                 let mut qfmt = template.clone();
                 qfmt = qfmt.replace(
                     &format!("{{{{{}}}}}", template_config.question_field),
@@ -127,7 +126,7 @@ fn main() -> Result<(), Box<dyn Error>> {
                     template_config.question_field, qfmt, template_config.question_field
                 );
 
-                Template::new(&format!("Card {}", index + 1))
+                Template::new(&template_config.question_field)
                     .qfmt(&qfmt)
                     .afmt(&afmt)
             })
