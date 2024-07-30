@@ -13,7 +13,7 @@ struct Config {
     note_type_name: String,
     #[serde(default = "default_deck_name")]
     deck_name: String,
-    #[serde(default = "default_deck_description")]
+    #[serde(default)]
     deck_description: String,
 }
 
@@ -23,10 +23,6 @@ fn default_note_type_name() -> String {
 
 fn default_deck_name() -> String {
     "Imported Deck".to_string()
-}
-
-fn default_deck_description() -> String {
-    "".to_string()
 }
 
 fn main() -> Result<(), Box<dyn Error>> {
