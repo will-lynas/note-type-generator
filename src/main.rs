@@ -1,9 +1,8 @@
 use genanki_rs::{Deck, Field, Model, Note, Template};
 use serde::Deserialize;
 use std::error::Error;
-use std::fs::File;
-use std::io::prelude::*;
-use std::io::BufReader;
+use std::fs::read_to_string;
+use std::io;
 
 const CSS_FILE_PATH: &str = "input/style.css";
 const CONFIG_PATH: &str = "input/config.toml";
@@ -31,20 +30,23 @@ fn default_deck_description() -> String {
 }
 
 fn main() -> Result<(), Box<dyn Error>> {
-    let mut custom_css = String::new();
+    let css = match read_to_string(CSS_FILE_PATH) {
+        Ok(content) => content,
+        Err(e) => match e.kind() {
+            io::ErrorKind::NotFound => String::new(),
+            _ => panic!("Error reading file {}", CSS_FILE_PATH),
+        },
+    };
 
-    if let Ok(css_file) = File::open(CSS_FILE_PATH) {
-        let mut buf_reader = BufReader::new(css_file);
+    let config_content = match read_to_string(CONFIG_PATH) {
+        Ok(content) => content,
+        Err(e) => match e.kind() {
+            io::ErrorKind::NotFound => String::new(),
+            _ => panic!("Error reading file {}", CONFIG_PATH),
+        },
+    };
 
-        if let Err(e) = buf_reader.read_to_string(&mut custom_css) {
-            eprintln!("Error reading file {}: {}", CSS_FILE_PATH, e);
-            return Err(Box::new(e));
-        }
-    }
-
-    // TODO: add error handling
-    let config_content = std::fs::read_to_string(CONFIG_PATH).unwrap();
-    let config: Config = toml::from_str(&config_content).unwrap();
+    let config: Config = toml::from_str(&config_content).expect("Error parsing config toml");
 
     let my_model = Model::new(
         1607392319,
@@ -57,7 +59,7 @@ fn main() -> Result<(), Box<dyn Error>> {
             .qfmt("{{Question}}")
             .afmt(r#"{{FrontSide}}<hr id="answer">{{Answer}}"#)],
     )
-    .css(custom_css);
+    .css(css);
 
     let my_note = Note::new(my_model, vec!["Capital of Argentina", "Buenos Aires"])?;
 
