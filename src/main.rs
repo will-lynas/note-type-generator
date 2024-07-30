@@ -6,6 +6,7 @@ use std::io;
 
 const CSS_FILE_PATH: &str = "input/style.css";
 const CONFIG_PATH: &str = "input/config.toml";
+const TEMPLATE_PATH: &str = "input/template.html";
 
 #[derive(Deserialize, Debug)]
 struct Config {
@@ -36,6 +37,14 @@ fn main() -> Result<(), Box<dyn Error>> {
         },
     };
 
+    let template = match read_to_string(TEMPLATE_PATH) {
+        Ok(content) => content,
+        Err(e) => match e.kind() {
+            io::ErrorKind::NotFound => String::new(),
+            _ => panic!("Error reading file {}", TEMPLATE_PATH),
+        },
+    };
+
     let config_content = match read_to_string(CONFIG_PATH) {
         Ok(content) => content,
         Err(e) => match e.kind() {
@@ -54,9 +63,7 @@ fn main() -> Result<(), Box<dyn Error>> {
             .into_iter()
             .map(|s| Field::new(&s.clone()).font("Arial"))
             .collect(),
-        vec![Template::new("Card 1")
-            .qfmt("{{My Question}}")
-            .afmt(r#"{{FrontSide}}<hr id="answer">{{My Answer}}"#)],
+        vec![Template::new("Card 1").qfmt(&template).afmt(&template)],
     )
     .css(css);
 
