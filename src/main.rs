@@ -1,4 +1,5 @@
 use genanki_rs::{Deck, Field, Model, Note, Template};
+use regex::Regex;
 use serde::Deserialize;
 use std::collections::hash_map::DefaultHasher;
 use std::error::Error;
@@ -85,6 +86,28 @@ fn main() -> Result<(), Box<dyn Error>> {
             if !config.fields.contains(front_field) {
                 panic!("Front field '{}' is not in fields", front_field);
             }
+        }
+    }
+
+    let field_pattern = Regex::new(r"\{\{([^\}]+)\}\}").unwrap();
+
+    let all_fields_in_template: Vec<String> = field_pattern
+        .captures_iter(&template)
+        .map(|cap| cap[1].to_string())
+        .collect();
+
+    for field in &config.fields {
+        if !all_fields_in_template.contains(field) {
+            panic!("Field '{}' in config is not found in the template", field);
+        }
+    }
+
+    for field in &all_fields_in_template {
+        if !config.fields.contains(field) {
+            panic!(
+                "Field '{}' in template is not found in the config fields",
+                field
+            );
         }
     }
 
