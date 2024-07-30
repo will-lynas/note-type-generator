@@ -73,6 +73,21 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     let config: Config = toml::from_str(&config_content).expect("Error parsing config toml");
 
+    for template_config in &config.templates {
+        if !config.fields.contains(&template_config.question_field) {
+            panic!(
+                "Question field '{}' is not in fields",
+                template_config.question_field
+            );
+        }
+
+        for front_field in &template_config.front_fields {
+            if !config.fields.contains(front_field) {
+                panic!("Front field '{}' is not in fields", front_field);
+            }
+        }
+    }
+
     let my_model = Model::new(
         hash_string_to_i64(&config.note_type_name),
         &config.note_type_name,
