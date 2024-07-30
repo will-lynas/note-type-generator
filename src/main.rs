@@ -9,6 +9,7 @@ use std::io;
 const CSS_FILE_PATH: &str = "input/style.css";
 const CONFIG_PATH: &str = "input/config.toml";
 const TEMPLATE_PATH: &str = "input/template.html";
+const OUTPUT_PATH: &str = "output.apkg";
 
 #[derive(Deserialize, Debug)]
 struct Config {
@@ -106,6 +107,6 @@ fn main() -> Result<(), Box<dyn Error>> {
     );
 
     my_deck.add_note(my_note);
-    my_deck.write_to_file("output.apkg")?;
+    my_deck.write_to_file(OUTPUT_PATH)?;
     Ok(())
 }
