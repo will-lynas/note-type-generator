@@ -122,6 +122,11 @@ fn main() -> Result<(), Box<dyn Error>> {
                     }
                 }
 
+                let qfmt = format!(
+                    "{{{{#{}}}}}\n\n{}\n\n{{{{/{}}}}}",
+                    template_config.question_field, qfmt, template_config.question_field
+                );
+
                 Template::new(&format!("Card {}", index + 1))
                     .qfmt(&qfmt)
                     .afmt(&afmt)
