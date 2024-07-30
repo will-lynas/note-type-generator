@@ -8,6 +8,9 @@ const CSS_FILE_PATH: &str = "input/style.css";
 const CONFIG_PATH: &str = "input/config.toml";
 const TEMPLATE_PATH: &str = "input/template.html";
 
+const NOTE_ID: i64 = 1607392319;
+const DECK_ID: i64 = 2059400110;
+
 #[derive(Deserialize, Debug)]
 struct Config {
     #[serde(default = "default_note_type_name")]
@@ -64,7 +67,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     let config: Config = toml::from_str(&config_content).expect("Error parsing config toml");
 
     let my_model = Model::new(
-        1607392319,
+        NOTE_ID,
         &config.note_type_name,
         config
             .fields
@@ -90,7 +93,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     // Use the field names as values on the placeholder note
     let my_note = Note::new(my_model, config.fields.iter().map(|s| s.as_str()).collect())?;
 
-    let mut my_deck = Deck::new(2059400110, &config.deck_name, &config.deck_description);
+    let mut my_deck = Deck::new(DECK_ID, &config.deck_name, &config.deck_description);
 
     my_deck.add_note(my_note);
     my_deck.write_to_file("output.apkg")?;
