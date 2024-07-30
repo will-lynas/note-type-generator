@@ -89,7 +89,7 @@ fn main() -> Result<(), Box<dyn Error>> {
                 let qfmt = template_config.front_fields.join(" ")
                     + " -> "
                     + &template_config.question_field;
-                Template::new(&format!("Card {}", index))
+                Template::new(&format!("Card {}", index + 1))
                     .qfmt(&qfmt)
                     .afmt(&template)
             })
