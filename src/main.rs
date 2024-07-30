@@ -102,15 +102,29 @@ fn main() -> Result<(), Box<dyn Error>> {
             .enumerate()
             .map(|(index, template_config)| {
                 let mut qfmt = template.clone();
-                qfmt = qfmt.replace(&format!("{{{{{}}}}}", template_config.question_field), "?");
+                qfmt = qfmt.replace(
+                    &format!("{{{{{}}}}}", template_config.question_field),
+                    r#"<span class="cloze">?</span>"#,
+                );
+
+                let mut afmt = template.clone();
+                afmt = afmt.replace(
+                    &format!("{{{{{}}}}}", template_config.question_field),
+                    &format!(
+                        r#"<span class="cloze">{{{{{}}}}}</span>"#,
+                        template_config.question_field
+                    ),
+                );
+
                 for field in &config.fields {
                     if !template_config.front_fields.contains(field) {
                         qfmt = qfmt.replace(&format!("{{{{{}}}}}", field), "");
                     }
                 }
+
                 Template::new(&format!("Card {}", index + 1))
                     .qfmt(&qfmt)
-                    .afmt(&template)
+                    .afmt(&afmt)
             })
             .collect(),
     )
