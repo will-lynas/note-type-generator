@@ -18,6 +18,14 @@ struct Config {
     deck_description: String,
     #[serde(default)]
     fields: Vec<String>,
+    #[serde(default)]
+    templates: Vec<TemplateConfig>,
+}
+
+#[derive(Deserialize, Debug)]
+struct TemplateConfig {
+    front_fields: Vec<String>,
+    question_field: String,
 }
 
 fn default_note_type_name() -> String {
@@ -60,14 +68,27 @@ fn main() -> Result<(), Box<dyn Error>> {
         &config.note_type_name,
         config
             .fields
-            .into_iter()
+            .iter()
             .map(|s| Field::new(&s.clone()).font("Arial"))
             .collect(),
-        vec![Template::new("Card 1").qfmt(&template).afmt(&template)],
+        config
+            .templates
+            .into_iter()
+            .enumerate()
+            .map(|(index, template_config)| {
+                let qfmt = template_config.front_fields.join(" ")
+                    + " -> "
+                    + &template_config.question_field;
+                Template::new(&format!("Card {}", index))
+                    .qfmt(&qfmt)
+                    .afmt(&template)
+            })
+            .collect(),
     )
     .css(css);
 
-    let my_note = Note::new(my_model, vec!["Capital of Argentina", "Buenos Aires"])?;
+    // Use the field names as values on the placeholder note
+    let my_note = Note::new(my_model, config.fields.iter().map(|s| s.as_str()).collect())?;
 
     let mut my_deck = Deck::new(2059400110, &config.deck_name, &config.deck_description);
 
