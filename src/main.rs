@@ -101,9 +101,13 @@ fn main() -> Result<(), Box<dyn Error>> {
             .into_iter()
             .enumerate()
             .map(|(index, template_config)| {
-                let qfmt = template_config.front_fields.join(" ")
-                    + " -> "
-                    + &template_config.question_field;
+                let mut qfmt = template.clone();
+                qfmt = qfmt.replace(&format!("{{{{{}}}}}", template_config.question_field), "?");
+                for field in &config.fields {
+                    if !template_config.front_fields.contains(field) {
+                        qfmt = qfmt.replace(&format!("{{{{{}}}}}", field), "");
+                    }
+                }
                 Template::new(&format!("Card {}", index + 1))
                     .qfmt(&qfmt)
                     .afmt(&template)
