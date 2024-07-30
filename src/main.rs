@@ -15,6 +15,8 @@ struct Config {
     deck_name: String,
     #[serde(default)]
     deck_description: String,
+    #[serde(default)]
+    fields: Vec<String>,
 }
 
 fn default_note_type_name() -> String {
@@ -47,13 +49,14 @@ fn main() -> Result<(), Box<dyn Error>> {
     let my_model = Model::new(
         1607392319,
         &config.note_type_name,
-        vec![
-            Field::new("Question").font("Arial"),
-            Field::new("Answer").font("Arial"),
-        ],
+        config
+            .fields
+            .into_iter()
+            .map(|s| Field::new(&s.clone()).font("Arial"))
+            .collect(),
         vec![Template::new("Card 1")
-            .qfmt("{{Question}}")
-            .afmt(r#"{{FrontSide}}<hr id="answer">{{Answer}}"#)],
+            .qfmt("{{My Question}}")
+            .afmt(r#"{{FrontSide}}<hr id="answer">{{My Answer}}"#)],
     )
     .css(css);
 
