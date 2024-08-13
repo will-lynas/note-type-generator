@@ -1,6 +1,5 @@
 use genanki_rs::{Deck, Field, Model, Note, Template};
 use regex::Regex;
-use serde::Deserialize;
 use std::collections::hash_map::DefaultHasher;
 use std::error::Error;
 use std::fs::read_to_string;
@@ -9,36 +8,9 @@ use std::io;
 use std::path::PathBuf;
 
 mod args;
+mod config;
 
 const OUTPUT_PATH: &str = "output.apkg";
-
-#[derive(Deserialize, Debug)]
-struct Config {
-    #[serde(default = "default_note_type_name")]
-    note_type_name: String,
-    #[serde(default = "default_deck_name")]
-    deck_name: String,
-    #[serde(default)]
-    deck_description: String,
-    #[serde(default)]
-    fields: Vec<String>,
-    #[serde(default)]
-    templates: Vec<TemplateConfig>,
-}
-
-#[derive(Deserialize, Debug)]
-struct TemplateConfig {
-    front_fields: Vec<String>,
-    question_field: String,
-}
-
-fn default_note_type_name() -> String {
-    "Imported Note Type".to_string()
-}
-
-fn default_deck_name() -> String {
-    "Imported Deck".to_string()
-}
 
 fn hash_string_to_i64(s: &str) -> i64 {
     let mut hasher = DefaultHasher::new();
@@ -67,7 +39,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     let css = get_file_contents(args.css);
     let config_content = get_file_contents(args.config);
 
-    let config: Config = toml::from_str(&config_content).expect("Error parsing config toml");
+    let config = config::get(config_content);
 
     for template_config in &config.templates {
         if !config.fields.contains(&template_config.question_field) {
