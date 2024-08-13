@@ -30,6 +30,9 @@ pub fn create(
         .map(|cap| cap[1].to_string())
         .collect();
 
+    // TODO: don't panic here
+    // Instead, aggregate errors from both loops and report them
+
     for field in &fields {
         if !all_fields_in_template.contains(field) {
             panic!("Field '{}' in config is not found in the template", field);
