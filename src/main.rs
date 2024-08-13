@@ -1,3 +1,4 @@
+use clap::{Parser, ValueHint};
 use genanki_rs::{Deck, Field, Model, Note, Template};
 use regex::Regex;
 use serde::Deserialize;
@@ -6,11 +7,34 @@ use std::error::Error;
 use std::fs::read_to_string;
 use std::hash::{Hash, Hasher};
 use std::io;
+use std::path::PathBuf;
 
-const CSS_FILE_PATH: &str = "input/style.css";
-const CONFIG_PATH: &str = "input/config.toml";
-const TEMPLATE_PATH: &str = "input/template.html";
 const OUTPUT_PATH: &str = "output.apkg";
+
+#[derive(Parser, Debug)]
+#[command()]
+struct Args {
+    #[arg(
+        long,
+        value_hint = ValueHint::FilePath,
+        value_parser = clap::value_parser!(PathBuf)
+    )]
+    css: PathBuf,
+
+    #[arg(
+        long,
+        value_hint = ValueHint::FilePath,
+        value_parser = clap::value_parser!(PathBuf)
+    )]
+    template: PathBuf,
+
+    #[arg(
+        long,
+        value_hint = ValueHint::FilePath,
+        value_parser = clap::value_parser!(PathBuf)
+    )]
+    config: PathBuf,
+}
 
 #[derive(Deserialize, Debug)]
 struct Config {
@@ -47,30 +71,25 @@ fn hash_string_to_i64(s: &str) -> i64 {
     hash as i64
 }
 
+fn get_file_contents(path: PathBuf) -> String {
+    // TODO: Return Error instead of panicking
+    match read_to_string(path.clone()) {
+        Ok(content) => content,
+        Err(e) => match e.kind() {
+            io::ErrorKind::NotFound => {
+                panic!("File does not exist: {}", path.clone().display());
+            }
+            _ => panic!("Error reading file {}", path.clone().display()),
+        },
+    }
+}
+
 fn main() -> Result<(), Box<dyn Error>> {
-    let css = match read_to_string(CSS_FILE_PATH) {
-        Ok(content) => content,
-        Err(e) => match e.kind() {
-            io::ErrorKind::NotFound => String::new(),
-            _ => panic!("Error reading file {}", CSS_FILE_PATH),
-        },
-    };
+    let args = Args::parse();
 
-    let template = match read_to_string(TEMPLATE_PATH) {
-        Ok(content) => content,
-        Err(e) => match e.kind() {
-            io::ErrorKind::NotFound => String::new(),
-            _ => panic!("Error reading file {}", TEMPLATE_PATH),
-        },
-    };
-
-    let config_content = match read_to_string(CONFIG_PATH) {
-        Ok(content) => content,
-        Err(e) => match e.kind() {
-            io::ErrorKind::NotFound => String::new(),
-            _ => panic!("Error reading file {}", CONFIG_PATH),
-        },
-    };
+    let template = get_file_contents(args.template);
+    let css = get_file_contents(args.css);
+    let config_content = get_file_contents(args.config);
 
     let config: Config = toml::from_str(&config_content).expect("Error parsing config toml");
 
