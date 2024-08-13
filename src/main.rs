@@ -25,7 +25,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     let files = Files::load(args.template, args.css, args.config);
     let config = config::get(files.config);
 
-    let my_model = Model::new(
+    let model = Model::new(
         hash_string_to_i64(&config.note_type_name),
         &config.note_type_name,
         config
@@ -38,15 +38,15 @@ fn main() -> Result<(), Box<dyn Error>> {
     .css(files.css);
 
     // Use the field names as values on the placeholder note
-    let my_note = Note::new(my_model, config.fields.iter().map(|s| s.as_str()).collect())?;
+    let note = Note::new(model, config.fields.iter().map(|s| s.as_str()).collect())?;
 
-    let mut my_deck = Deck::new(
+    let mut deck = Deck::new(
         hash_string_to_i64(&config.deck_name),
         &config.deck_name,
         &config.deck_description,
     );
 
-    my_deck.add_note(my_note);
-    my_deck.write_to_file(OUTPUT_PATH)?;
+    deck.add_note(note);
+    deck.write_to_file(OUTPUT_PATH)?;
     Ok(())
 }
