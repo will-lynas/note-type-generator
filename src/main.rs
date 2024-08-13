@@ -20,12 +20,12 @@ fn hash_string_to_i64(s: &str) -> i64 {
 }
 
 fn get_file_contents(path: PathBuf) -> String {
-    // TODO: Return Error instead of panicking
     match read_to_string(path.clone()) {
         Ok(content) => content,
         Err(e) => match e.kind() {
             io::ErrorKind::NotFound => {
-                panic!("File does not exist: {}", path.display());
+                eprintln!("File does not exist: {}", path.display());
+                std::process::exit(1);
             }
             _ => panic!("Error reading file {}", path.display()),
         },
