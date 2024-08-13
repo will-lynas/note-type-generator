@@ -25,9 +25,9 @@ fn get_file_contents(path: PathBuf) -> String {
         Ok(content) => content,
         Err(e) => match e.kind() {
             io::ErrorKind::NotFound => {
-                panic!("File does not exist: {}", path.clone().display());
+                panic!("File does not exist: {}", path.display());
             }
-            _ => panic!("Error reading file {}", path.clone().display()),
+            _ => panic!("Error reading file {}", path.display()),
         },
     }
 }
