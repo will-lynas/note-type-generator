@@ -29,5 +29,6 @@ fn default_deck_name() -> String {
 }
 
 pub fn get(config_content: String) -> Config {
+    // TODO: proper error handling here
     toml::from_str(&config_content).expect("Error parsing config toml")
 }
