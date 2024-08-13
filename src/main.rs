@@ -1,4 +1,3 @@
-use clap::{Parser, ValueHint};
 use genanki_rs::{Deck, Field, Model, Note, Template};
 use regex::Regex;
 use serde::Deserialize;
@@ -9,32 +8,9 @@ use std::hash::{Hash, Hasher};
 use std::io;
 use std::path::PathBuf;
 
+mod args;
+
 const OUTPUT_PATH: &str = "output.apkg";
-
-#[derive(Parser, Debug)]
-#[command()]
-struct Args {
-    #[arg(
-        long,
-        value_hint = ValueHint::FilePath,
-        value_parser = clap::value_parser!(PathBuf)
-    )]
-    css: PathBuf,
-
-    #[arg(
-        long,
-        value_hint = ValueHint::FilePath,
-        value_parser = clap::value_parser!(PathBuf)
-    )]
-    template: PathBuf,
-
-    #[arg(
-        long,
-        value_hint = ValueHint::FilePath,
-        value_parser = clap::value_parser!(PathBuf)
-    )]
-    config: PathBuf,
-}
 
 #[derive(Deserialize, Debug)]
 struct Config {
@@ -85,7 +61,7 @@ fn get_file_contents(path: PathBuf) -> String {
 }
 
 fn main() -> Result<(), Box<dyn Error>> {
-    let args = Args::parse();
+    let args = args::parse();
 
     let template = get_file_contents(args.template);
     let css = get_file_contents(args.css);
