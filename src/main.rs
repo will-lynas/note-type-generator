@@ -1,14 +1,15 @@
-use genanki_rs::{Deck, Field, Model, Note, Template};
-use regex::Regex;
-use std::collections::hash_map::DefaultHasher;
-use std::error::Error;
-use std::fs::read_to_string;
-use std::hash::{Hash, Hasher};
-use std::io;
-use std::path::PathBuf;
-
 mod args;
 mod config;
+mod files;
+
+use std::collections::hash_map::DefaultHasher;
+use std::error::Error;
+use std::hash::{Hash, Hasher};
+
+use genanki_rs::{Deck, Field, Model, Note, Template};
+use regex::Regex;
+
+use files::Files;
 
 const OUTPUT_PATH: &str = "output.apkg";
 
@@ -19,27 +20,10 @@ fn hash_string_to_i64(s: &str) -> i64 {
     hash as i64
 }
 
-fn get_file_contents(path: PathBuf) -> String {
-    match read_to_string(path.clone()) {
-        Ok(content) => content,
-        Err(e) => match e.kind() {
-            io::ErrorKind::NotFound => {
-                eprintln!("File does not exist: {}", path.display());
-                std::process::exit(1);
-            }
-            _ => panic!("Error reading file {}", path.display()),
-        },
-    }
-}
-
 fn main() -> Result<(), Box<dyn Error>> {
     let args = args::parse();
-
-    let template = get_file_contents(args.template);
-    let css = get_file_contents(args.css);
-    let config_content = get_file_contents(args.config);
-
-    let config = config::get(config_content);
+    let files = Files::load(args.template, args.css, args.config);
+    let config = config::get(files.config);
 
     for template_config in &config.templates {
         if !config.fields.contains(&template_config.question_field) {
@@ -59,7 +43,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     let field_pattern = Regex::new(r"\{\{([^\}]+)\}\}").unwrap();
 
     let all_fields_in_template: Vec<String> = field_pattern
-        .captures_iter(&template)
+        .captures_iter(&files.template)
         .map(|cap| cap[1].to_string())
         .collect();
 
@@ -90,13 +74,13 @@ fn main() -> Result<(), Box<dyn Error>> {
             .templates
             .into_iter()
             .map(|template_config| {
-                let mut qfmt = template.clone();
+                let mut qfmt = files.template.clone();
                 qfmt = qfmt.replace(
                     &format!("{{{{{}}}}}", template_config.question_field),
                     r#"<span class="cloze">?</span>"#,
                 );
 
-                let mut afmt = template.clone();
+                let mut afmt = files.template.clone();
                 afmt = afmt.replace(
                     &format!("{{{{{}}}}}", template_config.question_field),
                     &format!(
@@ -122,7 +106,7 @@ fn main() -> Result<(), Box<dyn Error>> {
             })
             .collect(),
     )
-    .css(css);
+    .css(files.css);
 
     // Use the field names as values on the placeholder note
     let my_note = Note::new(my_model, config.fields.iter().map(|s| s.as_str()).collect())?;
