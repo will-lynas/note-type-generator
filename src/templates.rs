@@ -206,4 +206,24 @@ mod tests {
 
         pre_create(template_configs, fields, template);
     }
+
+    #[test]
+    #[should_panic(expected = "Field 'FieldX' in config is not found in the template")]
+    fn config_field_not_in_template() {
+        let template_configs = vec![];
+        let fields = vec![String::from("FieldX")];
+        let template = String::from("");
+
+        pre_create(template_configs, fields, template);
+    }
+
+    #[test]
+    #[should_panic(expected = "Field 'FieldX' in template is not found in the config fields")]
+    fn template_field_not_in_config() {
+        let template_configs = vec![];
+        let fields = vec![];
+        let template = String::from("{{FieldX}}");
+
+        pre_create(template_configs, fields, template);
+    }
 }
