@@ -85,7 +85,6 @@ fn pre_create(
             }
 
             let qfmt = format!(
-                "{{{{#{}}}}}\n\n{}\n\n{{{{/{}}}}}",
                 "{{{{#{}}}}}\n\n{}\n\n{{{{/{}}}}}\n",
                 template_config.question_field, qfmt, template_config.question_field
             );
@@ -104,7 +103,6 @@ pub fn create(
         .iter()
         .map(|template| {
             Template::new(&template.name)
-                .qfmt(&template.qftm)
                 .qfmt(&template.qfmt)
                 .afmt(&template.afmt)
         })
