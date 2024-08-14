@@ -3,7 +3,6 @@ use regex::Regex;
 
 use crate::{config::TemplateConfig, template_error::TemplateError};
 
-// TODO: Only derive these during tests
 #[derive(Debug, PartialEq)]
 struct PreTemplate {
     name: String,
