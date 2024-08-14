@@ -13,6 +13,12 @@ fn config_empty() {
 }
 
 #[test]
+fn unknown_key() {
+    // Unknown keys should be ignored
+    get("unknown_key = 'asdf'".to_string());
+}
+
+#[test]
 fn config_full() {
     let config = get(indoc! {r#"
         note_type_name = "Test Note Type"
