@@ -11,6 +11,7 @@ use genanki_rs::{Deck, Field, Model, Note};
 
 use files::Files;
 
+// TODO: move to config
 const OUTPUT_PATH: &str = "output.apkg";
 
 fn hash_string_to_i64(s: &str) -> i64 {
