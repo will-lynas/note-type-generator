@@ -1,7 +1,6 @@
 mod args;
 mod config;
 mod files;
-mod template_error;
 mod templates;
 
 use std::collections::hash_map::DefaultHasher;

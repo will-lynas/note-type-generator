@@ -1,7 +1,9 @@
+pub mod error;
+
 use genanki_rs::Template;
 use regex::Regex;
 
-use crate::{config::TemplateConfig, template_error::TemplateError};
+use crate::{config::TemplateConfig, templates::error::TemplateError};
 
 #[derive(Debug, PartialEq)]
 struct PreTemplate {
