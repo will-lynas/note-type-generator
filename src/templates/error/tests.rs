@@ -1,7 +1,7 @@
 use super::*;
 
 #[test]
-fn template_errors() {
+fn question_field_error() {
     assert_eq!(
         format!(
             "{}",
@@ -9,10 +9,18 @@ fn template_errors() {
         ),
         "Question field 'FieldX' is not in fields"
     );
+}
+
+#[test]
+fn front_field_error() {
     assert_eq!(
         format!("{}", TemplateError::FrontFieldError("FieldX".to_string())),
         "Front field 'FieldX' is not in fields"
     );
+}
+
+#[test]
+fn template_field_not_in_fields() {
     assert_eq!(
         format!(
             "{}",
@@ -20,6 +28,10 @@ fn template_errors() {
         ),
         "Field 'FieldX' in template is not found in the config fields"
     );
+}
+
+#[test]
+fn field_not_in_template() {
     assert_eq!(
         format!(
             "{}",
