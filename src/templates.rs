@@ -86,6 +86,7 @@ fn pre_create(
 
             let qfmt = format!(
                 "{{{{#{}}}}}\n\n{}\n\n{{{{/{}}}}}",
+                "{{{{#{}}}}}\n\n{}\n\n{{{{/{}}}}}\n",
                 template_config.question_field, qfmt, template_config.question_field
             );
 
