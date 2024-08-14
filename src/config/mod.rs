@@ -16,7 +16,7 @@ pub struct Config {
     pub field_font: String,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Debug, PartialEq)]
 pub struct TemplateConfig {
     pub front_fields: Vec<String>,
     pub question_field: String,
@@ -38,3 +38,6 @@ pub fn get(config_content: String) -> Config {
     // TODO: proper error handling here
     toml::from_str(&config_content).expect("Error parsing config toml")
 }
+
+#[cfg(test)]
+mod tests;
