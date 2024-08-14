@@ -1,7 +1,7 @@
 use genanki_rs::Template;
 use regex::Regex;
 
-use crate::config::TemplateConfig;
+use crate::{config::TemplateConfig, template_error::TemplateError};
 
 // TODO: Only derive these during tests
 #[derive(Debug, PartialEq)]
@@ -21,18 +21,17 @@ fn pre_create(
     template_configs: Vec<TemplateConfig>,
     fields: Vec<String>,
     template: String,
-) -> Vec<PreTemplate> {
+) -> Result<Vec<PreTemplate>, TemplateError> {
     for template_config in &template_configs {
         if !fields.contains(&template_config.question_field) {
-            panic!(
-                "Question field '{}' is not in fields",
-                template_config.question_field
-            );
+            return Err(TemplateError::QuestionFieldError(
+                template_config.question_field.clone(),
+            ));
         }
 
         for front_field in &template_config.front_fields {
             if !fields.contains(front_field) {
-                panic!("Front field '{}' is not in fields", front_field);
+                return Err(TemplateError::FrontFieldError(front_field.to_string()));
             }
         }
     }
@@ -49,20 +48,17 @@ fn pre_create(
 
     for field in &fields {
         if !all_fields_in_template.contains(field) {
-            panic!("Field '{}' in config is not found in the template", field);
+            return Err(TemplateError::FieldNotInTemplate(field.to_string()));
         }
     }
 
     for field in &all_fields_in_template {
         if !fields.contains(field) {
-            panic!(
-                "Field '{}' in template is not found in the config fields",
-                field
-            );
+            return Err(TemplateError::TemplateFieldNotInFields(field.to_string()));
         }
     }
 
-    template_configs
+    Ok(template_configs
         .into_iter()
         .map(|template_config| {
             let mut qfmt = template.clone();
@@ -93,22 +89,22 @@ fn pre_create(
 
             PreTemplate::new(template_config.question_field, qfmt, afmt)
         })
-        .collect()
+        .collect())
 }
 
 pub fn create(
     template_configs: Vec<TemplateConfig>,
     fields: Vec<String>,
     template: String,
-) -> Vec<Template> {
-    pre_create(template_configs, fields, template)
+) -> Result<Vec<Template>, TemplateError> {
+    Ok(pre_create(template_configs, fields, template)?
         .iter()
         .map(|template| {
             Template::new(&template.name)
                 .qfmt(&template.qfmt)
                 .afmt(&template.afmt)
         })
-        .collect()
+        .collect())
 }
 
 #[cfg(test)]
@@ -147,7 +143,7 @@ mod tests {
 
         let template = String::from("{{Field1}} | {{Field2}} | {{Field3}}");
 
-        let templates = pre_create(template_configs, fields, template);
+        let templates = pre_create(template_configs, fields, template).unwrap();
 
         assert_eq!(templates.len(), 2);
 
@@ -182,7 +178,6 @@ mod tests {
     }
 
     #[test]
-    #[should_panic(expected = "Question field 'FieldX' is not in fields")]
     fn question_field_not_in_fields() {
         let template_configs = vec![TemplateConfig {
             question_field: String::from("FieldX"),
@@ -191,11 +186,15 @@ mod tests {
         let fields = vec![];
         let template = String::from("");
 
-        pre_create(template_configs, fields, template);
+        assert_eq!(
+            pre_create(template_configs, fields, template)
+                .err()
+                .unwrap(),
+            TemplateError::QuestionFieldError("FieldX".to_string())
+        );
     }
 
     #[test]
-    #[should_panic(expected = "Front field 'FieldY' is not in fields")]
     fn front_field_not_in_fields() {
         let template_configs = vec![TemplateConfig {
             question_field: String::from("FieldX"),
@@ -204,26 +203,39 @@ mod tests {
         let fields = vec![String::from("FieldX")];
         let template = String::from("");
 
-        pre_create(template_configs, fields, template);
+        assert_eq!(
+            pre_create(template_configs, fields, template)
+                .err()
+                .unwrap(),
+            TemplateError::FrontFieldError("FieldY".to_string())
+        );
     }
 
     #[test]
-    #[should_panic(expected = "Field 'FieldX' in config is not found in the template")]
     fn config_field_not_in_template() {
         let template_configs = vec![];
         let fields = vec![String::from("FieldX")];
         let template = String::from("");
 
-        pre_create(template_configs, fields, template);
+        assert_eq!(
+            pre_create(template_configs, fields, template)
+                .err()
+                .unwrap(),
+            TemplateError::FieldNotInTemplate("FieldX".to_string())
+        );
     }
 
     #[test]
-    #[should_panic(expected = "Field 'FieldX' in template is not found in the config fields")]
     fn template_field_not_in_config() {
         let template_configs = vec![];
         let fields = vec![];
         let template = String::from("{{FieldX}}");
 
-        pre_create(template_configs, fields, template);
+        assert_eq!(
+            pre_create(template_configs, fields, template)
+                .err()
+                .unwrap(),
+            TemplateError::TemplateFieldNotInFields("FieldX".to_string())
+        );
     }
 }

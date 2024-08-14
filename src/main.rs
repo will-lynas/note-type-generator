@@ -1,6 +1,7 @@
 mod args;
 mod config;
 mod files;
+mod template_error;
 mod templates;
 
 use std::collections::hash_map::DefaultHasher;
@@ -33,7 +34,7 @@ fn main() -> Result<(), Box<dyn Error>> {
             .iter()
             .map(|s| Field::new(&s.clone()).font(&config.field_font))
             .collect(),
-        templates::create(config.templates, config.fields.clone(), files.template),
+        templates::create(config.templates, config.fields.clone(), files.template)?,
     )
     .css(files.css);
 
