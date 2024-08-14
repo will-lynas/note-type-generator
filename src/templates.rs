@@ -180,4 +180,30 @@ mod tests {
 
         assert_eq!(templates, expected_templates);
     }
+
+    #[test]
+    #[should_panic(expected = "Question field 'FieldX' is not in fields")]
+    fn question_field_not_in_fields() {
+        let template_configs = vec![TemplateConfig {
+            question_field: String::from("FieldX"),
+            front_fields: vec![],
+        }];
+        let fields = vec![];
+        let template = String::from("");
+
+        pre_create(template_configs, fields, template);
+    }
+
+    #[test]
+    #[should_panic(expected = "Front field 'FieldY' is not in fields")]
+    fn front_field_not_in_fields() {
+        let template_configs = vec![TemplateConfig {
+            question_field: String::from("FieldX"),
+            front_fields: vec![String::from("FieldY")],
+        }];
+        let fields = vec![String::from("FieldX")];
+        let template = String::from("");
+
+        pre_create(template_configs, fields, template);
+    }
 }
