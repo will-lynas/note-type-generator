@@ -31,8 +31,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         config
             .fields
             .iter()
-            // TODO: put font in config
-            .map(|s| Field::new(&s.clone()).font("Arial"))
+            .map(|s| Field::new(&s.clone()).font(&config.field_font))
             .collect(),
         templates::create(config.templates, config.fields.clone(), files.template),
     )

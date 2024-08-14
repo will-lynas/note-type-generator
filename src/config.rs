@@ -12,6 +12,8 @@ pub struct Config {
     pub fields: Vec<String>,
     #[serde(default)]
     pub templates: Vec<TemplateConfig>,
+    #[serde(default = "default_field_font")]
+    pub field_font: String,
 }
 
 #[derive(Deserialize, Debug)]
@@ -26,6 +28,10 @@ fn default_note_type_name() -> String {
 
 fn default_deck_name() -> String {
     "Imported Deck".to_string()
+}
+
+fn default_field_font() -> String {
+    "Arial".to_string()
 }
 
 pub fn get(config_content: String) -> Config {
