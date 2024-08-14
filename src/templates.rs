@@ -5,13 +5,13 @@ use crate::config::TemplateConfig;
 
 struct PreTemplate {
     name: String,
-    qftm: String,
+    qfmt: String,
     afmt: String,
 }
 
 impl PreTemplate {
-    fn new(name: String, qftm: String, afmt: String) -> Self {
-        Self { name, qftm, afmt }
+    fn new(name: String, qfmt: String, afmt: String) -> Self {
+        Self { name, qfmt, afmt }
     }
 }
 
@@ -104,6 +104,7 @@ pub fn create(
         .map(|template| {
             Template::new(&template.name)
                 .qfmt(&template.qftm)
+                .qfmt(&template.qfmt)
                 .afmt(&template.afmt)
         })
         .collect()
