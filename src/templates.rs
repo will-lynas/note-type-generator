@@ -3,11 +3,23 @@ use regex::Regex;
 
 use crate::config::TemplateConfig;
 
-pub fn create(
+struct PreTemplate {
+    name: String,
+    qftm: String,
+    afmt: String,
+}
+
+impl PreTemplate {
+    fn new(name: String, qftm: String, afmt: String) -> Self {
+        Self { name, qftm, afmt }
+    }
+}
+
+fn pre_create(
     template_configs: Vec<TemplateConfig>,
     fields: Vec<String>,
     template: String,
-) -> Vec<Template> {
+) -> Vec<PreTemplate> {
     for template_config in &template_configs {
         if !fields.contains(&template_config.question_field) {
             panic!(
@@ -77,9 +89,22 @@ pub fn create(
                 template_config.question_field, qfmt, template_config.question_field
             );
 
-            Template::new(&template_config.question_field)
-                .qfmt(&qfmt)
-                .afmt(&afmt)
+            PreTemplate::new(template_config.question_field, qfmt, afmt)
+        })
+        .collect()
+}
+
+pub fn create(
+    template_configs: Vec<TemplateConfig>,
+    fields: Vec<String>,
+    template: String,
+) -> Vec<Template> {
+    pre_create(template_configs, fields, template)
+        .iter()
+        .map(|template| {
+            Template::new(&template.name)
+                .qfmt(&template.qftm)
+                .afmt(&template.afmt)
         })
         .collect()
 }
