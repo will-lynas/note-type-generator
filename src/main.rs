@@ -11,9 +11,6 @@ use genanki_rs::{Deck, Field, Model, Note};
 
 use files::Files;
 
-// TODO: move to config
-const OUTPUT_PATH: &str = "output.apkg";
-
 fn hash_string_to_i64(s: &str) -> i64 {
     let mut hasher = DefaultHasher::new();
     s.hash(&mut hasher);
@@ -48,6 +45,6 @@ fn main() -> Result<(), Box<dyn Error>> {
     );
 
     deck.add_note(note);
-    deck.write_to_file(OUTPUT_PATH)?;
+    deck.write_to_file(&config.output_path)?;
     Ok(())
 }

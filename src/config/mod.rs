@@ -14,6 +14,8 @@ pub struct Config {
     pub templates: Vec<TemplateConfig>,
     #[serde(default = "default_field_font")]
     pub field_font: String,
+    #[serde(default = "default_output_path")]
+    pub output_path: String,
 }
 
 #[derive(Deserialize, Debug, PartialEq)]
@@ -32,6 +34,10 @@ fn default_deck_name() -> String {
 
 fn default_field_font() -> String {
     "Arial".to_string()
+}
+
+fn default_output_path() -> String {
+    "output.apkg".to_string()
 }
 
 pub fn get(config_content: String) -> Config {

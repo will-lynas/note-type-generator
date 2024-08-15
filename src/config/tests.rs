@@ -9,7 +9,8 @@ fn config_empty() {
     assert_eq!(config.deck_description, "");
     assert_eq!(config.fields, Vec::<String>::new());
     assert_eq!(config.templates, Vec::<TemplateConfig>::new());
-    assert_eq!(config.field_font, "Arial")
+    assert_eq!(config.field_font, "Arial");
+    assert_eq!(config.output_path, "output.apkg");
 }
 
 #[test]
@@ -25,6 +26,7 @@ fn config_full() {
         deck_name = "Test Deck"
         deck_description = "Test Description"
         field_font = "Test Font"
+        output_path = "test_output.apkg"
 
         fields = ["FieldX", "FieldY", "FieldZ"]
 
@@ -56,4 +58,5 @@ fn config_full() {
         ]
     );
     assert_eq!(config.field_font, "Test Font");
+    assert_eq!(config.output_path, "test_output.apkg");
 }
