@@ -13,11 +13,12 @@ fn empty() {
 
         For more information, try '--help'.
     "#};
+    let cmdline_args_error_code = 2;
 
     let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME")).unwrap();
     cmd.assert()
         .failure()
-        .code(2)
+        .code(cmdline_args_error_code)
         .stderr(expected_stderr)
         .stdout("");
 }
