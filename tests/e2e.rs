@@ -19,6 +19,7 @@ fn empty() {
     let cmdline_args_error_code = 2;
 
     let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME")).unwrap();
+
     cmd.assert()
         .failure()
         .code(cmdline_args_error_code)
@@ -33,6 +34,7 @@ fn good_empty_files() {
     let config_file = NamedTempFile::new().unwrap();
 
     let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME")).unwrap();
+
     cmd.arg("--css")
         .arg(css_file.path())
         .arg("--template")
@@ -40,6 +42,7 @@ fn good_empty_files() {
         .arg("--config")
         .arg(config_file.path());
     println!("{}", css_file.path().to_str().unwrap());
+
     cmd.assert().success().stdout("").stderr("");
 }
 
@@ -48,6 +51,7 @@ fn template_not_in_fields() {
     let expected_stderr = indoc! {r#"
         Error: TemplateFieldNotInFields("does_not_exist")
         "#};
+
     let css_file = NamedTempFile::new().unwrap();
     let mut template_file = NamedTempFile::new().unwrap();
     let config_file = NamedTempFile::new().unwrap();
@@ -55,12 +59,14 @@ fn template_not_in_fields() {
     template_file.write_all(b"{{does_not_exist}}").unwrap();
 
     let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME")).unwrap();
+
     cmd.arg("--css")
         .arg(css_file.path())
         .arg("--template")
         .arg(template_file.path())
         .arg("--config")
         .arg(config_file.path());
+
     cmd.assert()
         .failure()
         .code(1)
