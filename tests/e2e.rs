@@ -49,7 +49,7 @@ fn good_empty_files() {
 #[test]
 fn template_not_in_fields() {
     let expected_stderr = indoc! {r#"
-        Error: TemplateFieldNotInFields("does_not_exist")
+        Error: Field 'does_not_exist' in template is not found in the config fields
         "#};
 
     let css_file = NamedTempFile::new().unwrap();

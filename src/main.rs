@@ -6,6 +6,7 @@ mod templates;
 use std::collections::hash_map::DefaultHasher;
 use std::error::Error;
 use std::hash::{Hash, Hasher};
+use std::process::exit;
 
 use genanki_rs::{Deck, Field, Model, Note};
 
@@ -23,6 +24,15 @@ fn main() -> Result<(), Box<dyn Error>> {
     let files = Files::load(args.template, args.css, args.config);
     let config = config::get(files.config);
 
+    let note_templates =
+        match templates::create(config.templates, config.fields.clone(), files.template) {
+            Ok(res) => res,
+            Err(e) => {
+                eprintln!("Error: {}", e);
+                exit(1);
+            }
+        };
+
     let model = Model::new(
         hash_string_to_i64(&config.note_type_name),
         &config.note_type_name,
@@ -31,7 +41,7 @@ fn main() -> Result<(), Box<dyn Error>> {
             .iter()
             .map(|s| Field::new(&s.clone()).font(&config.field_font))
             .collect(),
-        templates::create(config.templates, config.fields.clone(), files.template)?,
+        note_templates,
     )
     .css(files.css);
 
