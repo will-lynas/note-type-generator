@@ -22,7 +22,14 @@ fn hash_string_to_i64(s: &str) -> i64 {
 fn main() -> Result<(), Box<dyn Error>> {
     let args = args::parse();
     let files = Files::load(args.template, args.css, args.config);
-    let config = config::get(files.config);
+
+    let config = match config::get(files.config) {
+        Ok(res) => res,
+        Err(e) => {
+            eprintln!("Error parsing config file: {}", e);
+            exit(1);
+        }
+    };
 
     let note_templates =
         match templates::create(config.templates, config.fields.clone(), files.template) {

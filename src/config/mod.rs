@@ -1,4 +1,5 @@
 use serde::Deserialize;
+use toml::de::Error;
 
 #[derive(Deserialize, Debug)]
 pub struct Config {
@@ -40,9 +41,8 @@ fn default_output_path() -> String {
     "output.apkg".to_string()
 }
 
-pub fn get(config_content: String) -> Config {
-    // TODO: proper error handling here
-    toml::from_str(&config_content).expect("Error parsing config toml")
+pub fn get(config_content: String) -> Result<Config, Error> {
+    toml::from_str(&config_content)
 }
 
 #[cfg(test)]
