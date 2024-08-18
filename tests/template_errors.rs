@@ -22,7 +22,7 @@ fn template_not_in_fields() {
         .arg(config_file.path());
 
     let expected_stderr = indoc! {r#"
-        Error: Field 'does_not_exist' in template is not found in the config fields
+        Error generating templates: Field 'does_not_exist' in template is not found in the config fields
         "#};
 
     cmd.assert()
@@ -56,7 +56,7 @@ fn field_not_in_template() {
         .arg(config_file.path());
 
     let expected_stderr = indoc! {r#"
-        Error: Field 'does_not_exist' in config is not found in the template
+        Error generating templates: Field 'does_not_exist' in config is not found in the template
         "#};
 
     cmd.assert()

@@ -35,7 +35,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         match templates::create(config.templates, config.fields.clone(), files.template) {
             Ok(res) => res,
             Err(e) => {
-                eprintln!("Error: {}", e);
+                eprintln!("Error generating templates: {}", e);
                 exit(1);
             }
         };
