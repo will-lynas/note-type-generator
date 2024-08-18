@@ -6,6 +6,8 @@ use tempfile::NamedTempFile;
 
 #[test]
 fn empty() {
+    let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME")).unwrap();
+
     let expected_stderr = indoc! {r#"
         error: the following required arguments were not provided:
           --css <CSS>
@@ -17,8 +19,6 @@ fn empty() {
         For more information, try '--help'.
     "#};
     let cmdline_args_error_code = 2;
-
-    let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME")).unwrap();
 
     cmd.assert()
         .failure()
@@ -48,10 +48,6 @@ fn good_empty_files() {
 
 #[test]
 fn template_not_in_fields() {
-    let expected_stderr = indoc! {r#"
-        Error: Field 'does_not_exist' in template is not found in the config fields
-        "#};
-
     let css_file = NamedTempFile::new().unwrap();
     let mut template_file = NamedTempFile::new().unwrap();
     let config_file = NamedTempFile::new().unwrap();
@@ -66,6 +62,10 @@ fn template_not_in_fields() {
         .arg(template_file.path())
         .arg("--config")
         .arg(config_file.path());
+
+    let expected_stderr = indoc! {r#"
+        Error: Field 'does_not_exist' in template is not found in the config fields
+        "#};
 
     cmd.assert()
         .failure()
