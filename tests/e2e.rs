@@ -10,11 +10,11 @@ fn empty() {
 
     let expected_stderr = indoc! {r#"
         error: the following required arguments were not provided:
-          --css <CSS>
-          --template <TEMPLATE>
-          --config <CONFIG>
+          --css <FILE>
+          --template <FILE>
+          --config <FILE>
 
-        Usage: note-type-generator --css <CSS> --template <TEMPLATE> --config <CONFIG>
+        Usage: note-type-generator --css <FILE> --template <FILE> --config <FILE>
 
         For more information, try '--help'.
     "#};

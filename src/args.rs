@@ -8,6 +8,7 @@ pub struct Args {
     #[arg(
         long,
         value_hint = ValueHint::FilePath,
+        value_name = "FILE",
         value_parser = clap::value_parser!(PathBuf)
     )]
     pub css: PathBuf,
@@ -15,6 +16,7 @@ pub struct Args {
     #[arg(
         long,
         value_hint = ValueHint::FilePath,
+        value_name = "FILE",
         value_parser = clap::value_parser!(PathBuf)
     )]
     pub template: PathBuf,
@@ -22,6 +24,7 @@ pub struct Args {
     #[arg(
         long,
         value_hint = ValueHint::FilePath,
+        value_name = "FILE",
         value_parser = clap::value_parser!(PathBuf)
     )]
     pub config: PathBuf,
