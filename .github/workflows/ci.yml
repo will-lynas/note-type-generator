@@ -1,0 +1,40 @@
+name: Rust CI
+
+on:
+  push:
+    branches:
+      - '**'
+  pull_request:
+    branches:
+      - '**'
+
+jobs:
+  rust-check:
+    name: Run Various Cargo Checks
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Rust
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+        profile: minimal
+        override: true
+
+    - name: Run cargo fmt --check
+      run: cargo fmt --check
+
+    - name: Run cargo check
+      run: cargo check
+
+    - name: Run cargo check --tests
+      run: cargo check --tests
+
+    - name: Run cargo clippy
+      run: cargo clippy -- -D warnings
+
+    - name: Run cargo test
+      run: cargo test --all
