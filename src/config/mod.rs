@@ -19,6 +19,7 @@ pub struct Config {
     pub output_path: String,
 }
 
+#[allow(clippy::module_name_repetitions)]
 #[derive(Deserialize, Debug, PartialEq)]
 pub struct TemplateConfig {
     pub front_fields: Vec<String>,
