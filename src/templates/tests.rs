@@ -73,7 +73,7 @@ fn question_field_not_in_fields() {
         front_fields: vec![],
     }];
     let fields = vec![];
-    let template = String::from("");
+    let template = String::new();
 
     assert_eq!(
         pre_create(template_configs, fields, template)
@@ -90,7 +90,7 @@ fn front_field_not_in_fields() {
         front_fields: vec![String::from("FieldY")],
     }];
     let fields = vec![String::from("FieldX")];
-    let template = String::from("");
+    let template = String::new();
 
     assert_eq!(
         pre_create(template_configs, fields, template)
@@ -104,7 +104,7 @@ fn front_field_not_in_fields() {
 fn config_field_not_in_template() {
     let template_configs = vec![];
     let fields = vec![String::from("FieldX")];
-    let template = String::from("");
+    let template = String::new();
 
     assert_eq!(
         pre_create(template_configs, fields, template)

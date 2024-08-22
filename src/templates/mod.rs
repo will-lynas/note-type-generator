@@ -79,7 +79,7 @@ fn pre_create(
 
             for field in &fields {
                 if !template_config.front_fields.contains(field) {
-                    qfmt = qfmt.replace(&format!("{{{{{}}}}}", field), "");
+                    qfmt = qfmt.replace(&format!("{{{{{field}}}}}"), "");
                 }
             }
 

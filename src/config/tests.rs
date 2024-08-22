@@ -3,7 +3,7 @@ use indoc::indoc;
 
 #[test]
 fn config_empty() {
-    let config = get("".to_string()).unwrap();
+    let config = get(String::new()).unwrap();
     assert_eq!(config.note_type_name, "Imported Note Type");
     assert_eq!(config.deck_name, "Imported Deck");
     assert_eq!(config.deck_description, "");
