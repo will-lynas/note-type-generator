@@ -37,7 +37,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     };
 
     let note_templates =
-        match templates::create(config.templates, config.fields.clone(), files.template) {
+        match templates::create(config.templates, config.fields.clone(), &files.template) {
             Ok(res) => res,
             Err(e) => {
                 eprintln!("Error generating templates: {e}");

@@ -21,7 +21,7 @@ impl PreTemplate {
 fn pre_create(
     template_configs: Vec<TemplateConfig>,
     fields: Vec<String>,
-    template: String,
+    template: &str,
 ) -> Result<Vec<PreTemplate>, TemplateError> {
     for template_config in &template_configs {
         if !fields.contains(&template_config.question_field) {
@@ -62,14 +62,12 @@ fn pre_create(
     Ok(template_configs
         .into_iter()
         .map(|template_config| {
-            let mut qfmt = template.clone();
-            qfmt = qfmt.replace(
+            let mut qfmt = template.replace(
                 &format!("{{{{{}}}}}", template_config.question_field),
                 r#"<span class="cloze">?</span>"#,
             );
 
-            let mut afmt = template.clone();
-            afmt = afmt.replace(
+            let afmt = template.replace(
                 &format!("{{{{{}}}}}", template_config.question_field),
                 &format!(
                     r#"<span class="cloze">{{{{{}}}}}</span>"#,
@@ -96,7 +94,7 @@ fn pre_create(
 pub fn create(
     template_configs: Vec<TemplateConfig>,
     fields: Vec<String>,
-    template: String,
+    template: &str,
 ) -> Result<Vec<Template>, TemplateError> {
     Ok(pre_create(template_configs, fields, template)?
         .iter()
