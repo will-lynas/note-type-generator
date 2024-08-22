@@ -36,14 +36,14 @@ fn main() -> Result<(), Box<dyn Error>> {
         }
     };
 
-    let note_templates =
-        match templates::create(config.templates, config.fields.clone(), &files.template) {
-            Ok(res) => res,
-            Err(e) => {
-                eprintln!("Error generating templates: {e}");
-                exit(1);
-            }
-        };
+    let note_templates = match templates::create(config.templates, &config.fields, &files.template)
+    {
+        Ok(res) => res,
+        Err(e) => {
+            eprintln!("Error generating templates: {e}");
+            exit(1);
+        }
+    };
 
     let model = Model::new(
         hash_string_to_i64(&config.note_type_name),

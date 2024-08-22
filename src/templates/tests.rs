@@ -32,7 +32,7 @@ fn create_template_success() {
 
     let template = "{{Field1}} | {{Field2}} | {{Field3}}";
 
-    let templates = pre_create(template_configs, fields, template).unwrap();
+    let templates = pre_create(template_configs, &fields, template).unwrap();
 
     assert_eq!(templates.len(), 2);
 
@@ -76,7 +76,7 @@ fn question_field_not_in_fields() {
     let template = "";
 
     assert_eq!(
-        pre_create(template_configs, fields, template)
+        pre_create(template_configs, &fields, template)
             .err()
             .unwrap(),
         TemplateError::QuestionFieldError("FieldX".to_string())
@@ -93,7 +93,7 @@ fn front_field_not_in_fields() {
     let template = "";
 
     assert_eq!(
-        pre_create(template_configs, fields, template)
+        pre_create(template_configs, &fields, template)
             .err()
             .unwrap(),
         TemplateError::FrontFieldError("FieldY".to_string())
@@ -107,7 +107,7 @@ fn config_field_not_in_template() {
     let template = "";
 
     assert_eq!(
-        pre_create(template_configs, fields, template)
+        pre_create(template_configs, &fields, template)
             .err()
             .unwrap(),
         TemplateError::FieldNotInTemplate("FieldX".to_string())
@@ -121,7 +121,7 @@ fn template_field_not_in_config() {
     let template = "{{FieldX}}";
 
     assert_eq!(
-        pre_create(template_configs, fields, template)
+        pre_create(template_configs, &fields, template)
             .err()
             .unwrap(),
         TemplateError::TemplateFieldNotInFields("FieldX".to_string())

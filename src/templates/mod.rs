@@ -20,7 +20,7 @@ impl PreTemplate {
 
 fn pre_create(
     template_configs: Vec<TemplateConfig>,
-    fields: Vec<String>,
+    fields: &[String],
     template: &str,
 ) -> Result<Vec<PreTemplate>, TemplateError> {
     for template_config in &template_configs {
@@ -40,14 +40,14 @@ fn pre_create(
     let field_pattern = Regex::new(r"\{\{([^\}]+)\}\}").unwrap();
 
     let all_fields_in_template: Vec<String> = field_pattern
-        .captures_iter(&template)
+        .captures_iter(template)
         .map(|cap| cap[1].to_string())
         .collect();
 
     // TODO: don't panic here
     // Instead, aggregate errors from both loops and report them
 
-    for field in &fields {
+    for field in fields {
         if !all_fields_in_template.contains(field) {
             return Err(TemplateError::FieldNotInTemplate(field.to_string()));
         }
@@ -75,7 +75,7 @@ fn pre_create(
                 ),
             );
 
-            for field in &fields {
+            for field in fields {
                 if !template_config.front_fields.contains(field) {
                     qfmt = qfmt.replace(&format!("{{{{{field}}}}}"), "");
                 }
@@ -93,7 +93,7 @@ fn pre_create(
 
 pub fn create(
     template_configs: Vec<TemplateConfig>,
-    fields: Vec<String>,
+    fields: &[String],
     template: &str,
 ) -> Result<Vec<Template>, TemplateError> {
     Ok(pre_create(template_configs, fields, template)?
