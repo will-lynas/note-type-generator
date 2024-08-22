@@ -1,4 +1,4 @@
-use std::{fs::read_to_string, io, path::PathBuf};
+use std::{fs::read_to_string, io, path::Path};
 
 pub struct Files {
     pub template: String,
@@ -7,7 +7,7 @@ pub struct Files {
 }
 
 impl Files {
-    pub fn load(template: PathBuf, css: PathBuf, config: PathBuf) -> Self {
+    pub fn load(template: &Path, css: &Path, config: &Path) -> Self {
         Self {
             template: get_file_contents(template),
             css: get_file_contents(css),
@@ -16,8 +16,8 @@ impl Files {
     }
 }
 
-fn get_file_contents(path: PathBuf) -> String {
-    match read_to_string(path.clone()) {
+fn get_file_contents(path: &Path) -> String {
+    match read_to_string(path) {
         Ok(content) => content,
         Err(e) => match e.kind() {
             io::ErrorKind::NotFound => {

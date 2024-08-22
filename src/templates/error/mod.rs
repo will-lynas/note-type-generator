@@ -1,5 +1,7 @@
 use std::{error::Error, fmt};
 
+// TODO: Change this name
+#[allow(clippy::module_name_repetitions)]
 #[derive(Debug, PartialEq)]
 pub enum TemplateError {
     QuestionFieldError(String),
@@ -12,24 +14,19 @@ impl fmt::Display for TemplateError {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match *self {
             TemplateError::QuestionFieldError(ref field) => {
-                write!(f, "Question field '{}' is not in fields", field)
+                write!(f, "Question field '{field}' is not in fields")
             }
             TemplateError::FrontFieldError(ref field) => {
-                write!(f, "Front field '{}' is not in fields", field)
+                write!(f, "Front field '{field}' is not in fields")
             }
             TemplateError::TemplateFieldNotInFields(ref field) => {
                 write!(
                     f,
-                    "Field '{}' in template is not found in the config fields",
-                    field
+                    "Field '{field}' in template is not found in the config fields"
                 )
             }
             TemplateError::FieldNotInTemplate(ref field) => {
-                write!(
-                    f,
-                    "Field '{}' in config is not found in the template",
-                    field
-                )
+                write!(f, "Field '{field}' in config is not found in the template")
             }
         }
     }

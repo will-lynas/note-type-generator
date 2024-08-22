@@ -30,9 +30,9 @@ fn create_template_success() {
         String::from("Field3"),
     ];
 
-    let template = String::from("{{Field1}} | {{Field2}} | {{Field3}}");
+    let template = "{{Field1}} | {{Field2}} | {{Field3}}";
 
-    let templates = pre_create(template_configs, fields, template).unwrap();
+    let templates = pre_create(template_configs, &fields, template).unwrap();
 
     assert_eq!(templates.len(), 2);
 
@@ -73,10 +73,10 @@ fn question_field_not_in_fields() {
         front_fields: vec![],
     }];
     let fields = vec![];
-    let template = String::from("");
+    let template = "";
 
     assert_eq!(
-        pre_create(template_configs, fields, template)
+        pre_create(template_configs, &fields, template)
             .err()
             .unwrap(),
         TemplateError::QuestionFieldError("FieldX".to_string())
@@ -90,10 +90,10 @@ fn front_field_not_in_fields() {
         front_fields: vec![String::from("FieldY")],
     }];
     let fields = vec![String::from("FieldX")];
-    let template = String::from("");
+    let template = "";
 
     assert_eq!(
-        pre_create(template_configs, fields, template)
+        pre_create(template_configs, &fields, template)
             .err()
             .unwrap(),
         TemplateError::FrontFieldError("FieldY".to_string())
@@ -104,10 +104,10 @@ fn front_field_not_in_fields() {
 fn config_field_not_in_template() {
     let template_configs = vec![];
     let fields = vec![String::from("FieldX")];
-    let template = String::from("");
+    let template = "";
 
     assert_eq!(
-        pre_create(template_configs, fields, template)
+        pre_create(template_configs, &fields, template)
             .err()
             .unwrap(),
         TemplateError::FieldNotInTemplate("FieldX".to_string())
@@ -118,10 +118,10 @@ fn config_field_not_in_template() {
 fn template_field_not_in_config() {
     let template_configs = vec![];
     let fields = vec![];
-    let template = String::from("{{FieldX}}");
+    let template = "{{FieldX}}";
 
     assert_eq!(
-        pre_create(template_configs, fields, template)
+        pre_create(template_configs, &fields, template)
             .err()
             .unwrap(),
         TemplateError::TemplateFieldNotInFields("FieldX".to_string())
