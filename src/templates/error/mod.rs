@@ -1,5 +1,7 @@
 use std::{error::Error, fmt};
 
+// TODO: Change this name
+#[allow(clippy::module_name_repetitions)]
 #[derive(Debug, PartialEq)]
 pub enum TemplateError {
     QuestionFieldError(String),
