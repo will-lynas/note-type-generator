@@ -26,10 +26,7 @@ impl fmt::Display for TemplateError {
                 )
             }
             TemplateError::FieldNotInTemplate(ref field) => {
-                write!(
-                    f,
-                    "Field '{field}' in config is not found in the template"
-                )
+                write!(f, "Field '{field}' in config is not found in the template")
             }
         }
     }
