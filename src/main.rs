@@ -16,7 +16,7 @@ fn hash_string_to_i64(s: &str) -> i64 {
     let mut hasher = DefaultHasher::new();
     s.hash(&mut hasher);
     let hash = hasher.finish();
-    hash as i64
+        hash as i64
 }
 
 fn main() -> Result<(), Box<dyn Error>> {
