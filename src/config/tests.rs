@@ -3,7 +3,7 @@ use indoc::indoc;
 
 #[test]
 fn config_empty() {
-    let config = get(String::new()).unwrap();
+    let config = get("").unwrap();
     assert_eq!(config.note_type_name, "Imported Note Type");
     assert_eq!(config.deck_name, "Imported Deck");
     assert_eq!(config.deck_description, "");
@@ -16,7 +16,7 @@ fn config_empty() {
 #[test]
 fn unknown_key() {
     // Unknown keys should be ignored
-    get("unknown_key = 'asdf'".to_string()).unwrap();
+    get("unknown_key = 'asdf'").unwrap();
 }
 
 #[test]
@@ -37,8 +37,7 @@ fn config_full() {
         [[templates]]
         front_fields = ["FieldZ"]
         question_field = "FieldY"
-    "#}
-    .to_string())
+    "#})
     .unwrap();
 
     assert_eq!(config.note_type_name, "Test Note Type");

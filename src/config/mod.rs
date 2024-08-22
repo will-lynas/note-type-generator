@@ -42,8 +42,8 @@ fn default_output_path() -> String {
     "output.apkg".to_string()
 }
 
-pub fn get(config_content: String) -> Result<Config, Error> {
-    toml::from_str(&config_content)
+pub fn get(config_content: &str) -> Result<Config, Error> {
+    toml::from_str(config_content)
 }
 
 #[cfg(test)]

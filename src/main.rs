@@ -28,7 +28,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     let args = args::parse();
     let files = Files::load(args.template, args.css, args.config);
 
-    let config = match config::get(files.config) {
+    let config = match config::get(&files.config) {
         Ok(res) => res,
         Err(e) => {
             eprintln!("Error parsing config file: {e}");
