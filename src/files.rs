@@ -1,4 +1,8 @@
-use std::{fs::read_to_string, io, path::Path};
+use std::{
+    fs::read_to_string,
+    io,
+    path::Path,
+};
 
 pub struct Files {
     pub template: String,

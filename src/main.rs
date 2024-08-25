@@ -5,14 +5,23 @@ mod config;
 mod files;
 mod templates;
 
-use std::collections::hash_map::DefaultHasher;
-use std::error::Error;
-use std::hash::{Hash, Hasher};
-use std::process::exit;
-
-use genanki_rs::{Deck, Field, Model, Note};
+use std::{
+    collections::hash_map::DefaultHasher,
+    error::Error,
+    hash::{
+        Hash,
+        Hasher,
+    },
+    process::exit,
+};
 
 use files::Files;
+use genanki_rs::{
+    Deck,
+    Field,
+    Model,
+    Note,
+};
 
 fn hash_string_to_i64(s: &str) -> i64 {
     let mut hasher = DefaultHasher::new();
