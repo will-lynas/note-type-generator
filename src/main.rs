@@ -15,13 +15,14 @@ use std::{
     process::exit,
 };
 
-use files::Files;
 use genanki_rs::{
     Deck,
     Field,
     Model,
     Note,
 };
+
+use crate::files::Files;
 
 fn hash_string_to_i64(s: &str) -> i64 {
     let mut hasher = DefaultHasher::new();
