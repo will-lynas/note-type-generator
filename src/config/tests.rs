@@ -1,5 +1,6 @@
-use super::*;
 use indoc::indoc;
+
+use super::*;
 
 #[test]
 fn config_empty() {

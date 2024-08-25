@@ -1,5 +1,6 @@
-use super::*;
 use indoc::indoc;
+
+use super::*;
 
 impl PreTemplate {
     fn new_from_str(name: &str, qfmt: &str, afmt: &str) -> Self {

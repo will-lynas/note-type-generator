@@ -1,4 +1,7 @@
-use std::{error::Error, fmt};
+use std::{
+    error::Error,
+    fmt,
+};
 
 // TODO: Change this name
 #[allow(clippy::module_name_repetitions)]
