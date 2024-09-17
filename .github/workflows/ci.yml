@@ -12,4 +12,4 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: will-lynas/rust-check-ci@main
+    - uses: will-lynas/rust-check-ci@v0.2.0
