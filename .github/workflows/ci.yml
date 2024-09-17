@@ -1,5 +1,3 @@
-name: Rust CI
-
 on:
   push:
     branches:
@@ -11,9 +9,7 @@ on:
 
 jobs:
   rust-check:
-    name: Run Various Cargo Checks
     runs-on: ubuntu-latest
 
     steps:
-    - name: Run Checks
-      uses: will-lynas/rust-check-ci@main
+    - uses: will-lynas/rust-check-ci@main
