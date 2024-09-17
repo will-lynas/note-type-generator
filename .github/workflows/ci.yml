@@ -15,4 +15,4 @@ jobs:
 
     steps:
     - name: Run Checks
-      uses: will-lynas/rust-check-ci@v0.1.0
+      uses: will-lynas/rust-check-ci@main
