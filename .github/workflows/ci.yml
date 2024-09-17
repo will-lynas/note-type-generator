@@ -14,28 +14,5 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
-
-    - name: Set up Rust
-      uses: actions-rs/toolchain@v1
-      with:
-        toolchain: nightly
-        profile: minimal
-        override: true
-        components: rustfmt, clippy
-
-    - name: Run cargo fmt --check
-      run: cargo fmt --check
-
-    - name: Run cargo check
-      run: cargo check
-
-    - name: Run cargo check --tests
-      run: cargo check --tests
-
-    - name: Run cargo clippy
-      run: cargo clippy -- -D warnings
-
-    - name: Run cargo test
-      run: cargo test --all
+    - name: Run Checks
+      uses: will-lynas/rust-check-ci@v0.1.0
